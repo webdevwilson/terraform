@@ -120,7 +120,7 @@ func resourceVirtualRepositoryCreate(d *schema.ResourceData, m interface{}) erro
 
 func resourceVirtualRepositoryRead(d *schema.ResourceData, m interface{}) error {
 	c := m.(Client)
-	key := d.Get("key").(string)
+	key := d.Id()
 	var repo VirtualRepositoryConfiguration
 
 	err := c.GetRepository(key, &repo)

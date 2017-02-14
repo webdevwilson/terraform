@@ -170,7 +170,8 @@ func resourceLocalRepositoryCreate(d *schema.ResourceData, m interface{}) error 
 
 func resourceLocalRepositoryRead(d *schema.ResourceData, m interface{}) error {
 	c := m.(Client)
-	key := d.Get("key").(string)
+	key := d.Id()
+
 	var repo LocalRepositoryConfiguration
 
 	err := c.GetRepository(key, &repo)

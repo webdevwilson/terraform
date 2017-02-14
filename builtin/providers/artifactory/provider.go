@@ -19,6 +19,7 @@ func Provider() terraform.ResourceProvider {
 			"password": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("ARTIFACTORY_PASSWORD", nil),
 				Description: "Password or API Key to use",
 			},
