@@ -12,7 +12,7 @@ func Provider() terraform.ResourceProvider {
 			"username": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("ARTIFACTORY_USER", nil),
+				DefaultFunc: schema.EnvDefaultFunc("ARTIFACTORY_USERNAME", nil),
 				Description: "Username for authentication",
 			},
 

@@ -30,8 +30,8 @@ func TestProvider_impl(t *testing.T) {
 }
 
 func testAccPreCheck(t *testing.T) {
-	if v := os.Getenv("ARTIFACTORY_USER"); v == "" {
-		t.Fatal("ARTIFACTORY_USER must be set for acceptance tests")
+	if v := os.Getenv("ARTIFACTORY_USERNAME"); v == "" {
+		t.Fatal("ARTIFACTORY_USERNAME must be set for acceptance tests")
 	}
 	if v := os.Getenv("ARTIFACTORY_PASSWORD"); v == "" {
 		t.Fatal("ARTIFACTORY_PASSWORD must be set for acceptance tests")
