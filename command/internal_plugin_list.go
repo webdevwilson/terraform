@@ -81,11 +81,8 @@ import (
 var InternalProviders = map[string]plugin.ProviderFunc{
 	"alicloud":     alicloudprovider.Provider,
 	"archive":      archiveprovider.Provider,
-<<<<<<< HEAD
 	"artifactory":  artifactoryprovider.Provider,
-=======
 	"arukas":       arukasprovider.Provider,
->>>>>>> 3e2f324b2099827c4712ed55c69e089837840d0e
 	"atlas":        atlasprovider.Provider,
 	"aws":          awsprovider.Provider,
 	"azure":        azureprovider.Provider,
