@@ -177,6 +177,7 @@ func Provider() terraform.ResourceProvider {
 			"aws_iam_server_certificate":   dataSourceAwsIAMServerCertificate(),
 			"aws_instance":                 dataSourceAwsInstance(),
 			"aws_ip_ranges":                dataSourceAwsIPRanges(),
+			"aws_kms_secret":               dataSourceAwsKmsSecret(),
 			"aws_partition":                dataSourceAwsPartition(),
 			"aws_prefix_list":              dataSourceAwsPrefixList(),
 			"aws_redshift_service_account": dataSourceAwsRedshiftServiceAccount(),
@@ -190,7 +191,7 @@ func Provider() terraform.ResourceProvider {
 			"aws_vpc_endpoint":             dataSourceAwsVpcEndpoint(),
 			"aws_vpc_endpoint_service":     dataSourceAwsVpcEndpointService(),
 			"aws_vpc_peering_connection":   dataSourceAwsVpcPeeringConnection(),
-			"aws_kms_secret":               dataSourceAwsKmsSecret(),
+			"aws_vpn_gateway":              dataSourceAwsVpnGateway(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -235,6 +236,10 @@ func Provider() terraform.ResourceProvider {
 			"aws_cloudwatch_log_metric_filter":             resourceAwsCloudWatchLogMetricFilter(),
 			"aws_cloudwatch_log_stream":                    resourceAwsCloudWatchLogStream(),
 			"aws_cloudwatch_log_subscription_filter":       resourceAwsCloudwatchLogSubscriptionFilter(),
+			"aws_config_config_rule":                       resourceAwsConfigConfigRule(),
+			"aws_config_configuration_recorder":            resourceAwsConfigConfigurationRecorder(),
+			"aws_config_configuration_recorder_status":     resourceAwsConfigConfigurationRecorderStatus(),
+			"aws_config_delivery_channel":                  resourceAwsConfigDeliveryChannel(),
 			"aws_autoscaling_lifecycle_hook":               resourceAwsAutoscalingLifecycleHook(),
 			"aws_cloudwatch_metric_alarm":                  resourceAwsCloudWatchMetricAlarm(),
 			"aws_codedeploy_app":                           resourceAwsCodeDeployApp(),

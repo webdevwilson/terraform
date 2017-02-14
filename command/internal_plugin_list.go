@@ -9,6 +9,7 @@ import (
 	alicloudprovider "github.com/hashicorp/terraform/builtin/providers/alicloud"
 	archiveprovider "github.com/hashicorp/terraform/builtin/providers/archive"
 	artifactoryprovider "github.com/hashicorp/terraform/builtin/providers/artifactory"
+	arukasprovider "github.com/hashicorp/terraform/builtin/providers/arukas"
 	atlasprovider "github.com/hashicorp/terraform/builtin/providers/atlas"
 	awsprovider "github.com/hashicorp/terraform/builtin/providers/aws"
 	azureprovider "github.com/hashicorp/terraform/builtin/providers/azure"
@@ -80,7 +81,11 @@ import (
 var InternalProviders = map[string]plugin.ProviderFunc{
 	"alicloud":     alicloudprovider.Provider,
 	"archive":      archiveprovider.Provider,
+<<<<<<< HEAD
 	"artifactory":  artifactoryprovider.Provider,
+=======
+	"arukas":       arukasprovider.Provider,
+>>>>>>> 3e2f324b2099827c4712ed55c69e089837840d0e
 	"atlas":        atlasprovider.Provider,
 	"aws":          awsprovider.Provider,
 	"azure":        azureprovider.Provider,

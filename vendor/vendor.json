@@ -44,6 +44,15 @@
 		{
 			"checksumSHA1": "NJGBM6QQwUQEhaCBZlN9sCoaBZE=",
 			"comment": "v2.1.1-beta-8-gca4d906",
+			"path": "github.com/Azure/azure-sdk-for-go/arm/containerservice",
+			"revision": "0984e0641ae43b89283223034574d6465be93bf4",
+			"revisionTime": "2016-11-30T22:29:01Z",
+			"version": "v7.0.1-beta",
+			"versionExact": "v7.0.1-beta"
+		},
+		{
+			"checksumSHA1": "NJGBM6QQwUQEhaCBZlN9sCoaBZE=",
+			"comment": "v2.1.1-beta-8-gca4d906",
 			"path": "github.com/Azure/azure-sdk-for-go/arm/eventhub",
 			"revision": "0984e0641ae43b89283223034574d6465be93bf4",
 			"revisionTime": "2016-11-30T22:29:01Z",
@@ -451,6 +460,12 @@
 			"path": "github.com/armon/go-radix",
 			"revision": "4239b77079c7b5d1243b7b4736304ce8ddb6f0f2",
 			"revisionTime": "2016-01-15T23:47:25Z"
+		},
+		{
+			"checksumSHA1": "p9hyEP07p5jnjgUKHjKftWaKgs8=",
+			"path": "github.com/arukasio/cli",
+			"revision": "4f0dee167044ef44260d985a4d325f35a06e3149",
+			"revisionTime": "2017-01-23T00:46:44Z"
 		},
 		{
 			"checksumSHA1": "FWMPfJtpwiMBj9Ni0eMCVQYPV+M=",
@@ -1257,6 +1272,12 @@
 			"tree": true
 		},
 		{
+			"checksumSHA1": "SYxDN6l6j6OJ9f9BQDzneaJBd0k=",
+			"path": "github.com/gedex/inflector",
+			"revision": "046f2c31204676e3623730ee70fd0964e05822e7",
+			"revisionTime": "2016-11-03T04:27:56Z"
+		},
+		{
 			"checksumSHA1": "JKjnR1ApU6NcC79xcGaT7QRMx3A=",
 			"comment": "0.0.1-42-gea19666",
 			"path": "github.com/go-chef/chef",
@@ -1630,9 +1651,10 @@
 			"revision": "e4b2dc34c0f698ee04750bf2035d8b9384233e1b"
 		},
 		{
-			"checksumSHA1": "fSe5y1UgTDeYlnFfUcDA1zzcw+U=",
+			"checksumSHA1": "b8F628srIitj5p7Y130xc9k0QWs=",
 			"path": "github.com/hashicorp/go-cleanhttp",
-			"revision": "875fb671b3ddc66f8e2f0acc33829c8cb989a38d"
+			"revision": "3573b8b52aa7b37b9358d966a898feb387f62437",
+			"revisionTime": "2017-02-11T01:34:15Z"
 		},
 		{
 			"checksumSHA1": "nsL2kI426RMuq1jw15e7igFqdIY=",
@@ -2048,6 +2070,12 @@
 			"revisionTime": "2015-10-10T02:14:09Z"
 		},
 		{
+			"checksumSHA1": "BMxNUz0/EaTvexw9Vxm5jPG3w60=",
+			"path": "github.com/manyminds/api2go/jsonapi",
+			"revision": "dc368bb579c1a582faed50768e7fbcc463954c89",
+			"revisionTime": "2016-12-29T20:22:12Z"
+		},
+		{
 			"checksumSHA1": "yg57Q4J8Ob0LoYvqDxsWZ6AHffE=",
 			"path": "github.com/masterzen/simplexml/dom",
 			"revision": "4572e39b1ab9fe03ee513ce6fc7e289e98482190",
@@ -2078,6 +2106,12 @@
 			"path": "github.com/mattn/go-isatty",
 			"revision": "30a891c33c7cde7b02a981314b4228ec99380cca",
 			"revisionTime": "2016-11-23T14:36:37Z"
+		},
+		{
+			"checksumSHA1": "7OHq2KeND82oDITMEa+Mx4RmOaU=",
+			"path": "github.com/mattn/go-shellwords",
+			"revision": "753a2322a99f87c0eff284980e77f53041555bc6",
+			"revisionTime": "2017-01-23T01:43:24Z"
 		},
 		{
 			"checksumSHA1": "A0PtnlAbuZA6kKfuVkM8GSx2SSI=",
