@@ -1,6 +1,8 @@
 package artifactory
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -36,6 +38,7 @@ func Provider() terraform.ResourceProvider {
 			"artifactory_local_repository":   resourceLocalRepository(),
 			"artifactory_remote_repository":  resourceRemoteRepository(),
 			"artifactory_virtual_repository": resourceVirtualRepository(),
+			"artifactory_user":               resourceUser(),
 		},
 	}
 }
@@ -45,5 +48,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	pass := d.Get("password").(string)
 	url := d.Get("url").(string)
 	client := NewClient(user, pass, url)
+
+	// fail early. validate the connection to Artifactory
+	if err := client.Ping(); err != nil {
+		return nil, fmt.Errorf("Error connecting to Artifactory: %s", err)
+	}
+
 	return client, nil
 }

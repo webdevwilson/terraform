@@ -8,9 +8,10 @@ description: |-
 
 # Artifactory Provider
 
-The artifactory provider allows you to manage your repository configuration in Artifactory.
+[Artifactory](https://www.jfrog.com/artifactory/) is an artifact repository manager.
+The artifactory provider allows you to manage your repository and security configurations in Artifactory.
 
-Use the navigation to the left to read about the available resources.
+**Note: this provider requires Artifactory Pro v2.3.0 or later**.
 
 ## Example Usage
 

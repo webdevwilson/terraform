@@ -49,14 +49,10 @@ func testAccCheckRepositoryDestroy(id string) func(*terraform.State) error {
 			return fmt.Errorf("Not found %s", id)
 		}
 
-		exists, err := client.CheckRepositoryExists(rs.Primary.Attributes["key"])
+		err := client.GetRepository(rs.Primary.ID, nil)
 
-		if err != nil {
-			return err
-		}
-
-		if exists {
-			return fmt.Errorf("Repository still exists")
+		if err == nil {
+			return fmt.Errorf("Repository %s still exists", rs.Primary.ID)
 		}
 
 		return nil

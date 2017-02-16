@@ -11,7 +11,6 @@ func resourceLocalRepository() *schema.Resource {
 		Read:   resourceLocalRepositoryRead,
 		Update: resourceLocalRepositoryUpdate,
 		Delete: resourceLocalRepositoryDelete,
-		Exists: resourceLocalRepositoryExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -223,12 +222,6 @@ func resourceLocalRepositoryUpdate(d *schema.ResourceData, m interface{}) error 
 
 func resourceLocalRepositoryDelete(d *schema.ResourceData, m interface{}) error {
 	c := m.(Client)
-	key := d.Get("key").(string)
+	key := d.Id()
 	return c.DeleteRepository(key)
-}
-
-func resourceLocalRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	c := m.(Client)
-	key := d.Get("key").(string)
-	return c.CheckRepositoryExists(key)
 }

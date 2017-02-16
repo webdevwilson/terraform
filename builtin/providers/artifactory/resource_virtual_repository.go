@@ -1,6 +1,9 @@
 package artifactory
 
 import (
+	"log"
+	"os"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 )
@@ -11,9 +14,8 @@ func resourceVirtualRepository() *schema.Resource {
 		Read:   resourceVirtualRepositoryRead,
 		Update: resourceVirtualRepositoryUpdate,
 		Delete: resourceVirtualRepositoryDelete,
-		Exists: resourceVirtualRepositoryExists,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: virtualRepositoryImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"key": &schema.Schema{
@@ -87,6 +89,7 @@ func newVirtualRepositoryFromResource(d *schema.ResourceData) *VirtualRepository
 	for _, r := range d.Get("repositories").(*schema.Set).List() {
 		repos = append(repos, r.(string))
 	}
+	os.Stdout.WriteString("newVirtualRepositoryFromResource")
 
 	return &VirtualRepositoryConfiguration{
 		Key:                                           d.Get("key").(string),
@@ -105,9 +108,9 @@ func newVirtualRepositoryFromResource(d *schema.ResourceData) *VirtualRepository
 }
 
 func resourceVirtualRepositoryCreate(d *schema.ResourceData, m interface{}) error {
+	log.Printf("[TRACE] Creating artifactory.virtual_repository Id=%s\n", d.Get("key"))
 	c := m.(Client)
 	repo := newVirtualRepositoryFromResource(d)
-
 	err := c.CreateRepository(repo.Key, repo)
 
 	if err != nil {
@@ -119,6 +122,7 @@ func resourceVirtualRepositoryCreate(d *schema.ResourceData, m interface{}) erro
 }
 
 func resourceVirtualRepositoryRead(d *schema.ResourceData, m interface{}) error {
+	log.Printf("[TRACE] Reading artifactory.virtual_repository Id=%s\n", d.Id())
 	c := m.(Client)
 	key := d.Id()
 	var repo VirtualRepositoryConfiguration
@@ -151,6 +155,7 @@ func resourceVirtualRepositoryRead(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceVirtualRepositoryUpdate(d *schema.ResourceData, m interface{}) error {
+	log.Printf("[TRACE] Updating artifactory.virtual_repository Id=%s\n", d.Id())
 	c := m.(Client)
 	repo := newVirtualRepositoryFromResource(d)
 	err := c.UpdateRepository(repo.Key, repo)
@@ -161,13 +166,15 @@ func resourceVirtualRepositoryUpdate(d *schema.ResourceData, m interface{}) erro
 }
 
 func resourceVirtualRepositoryDelete(d *schema.ResourceData, m interface{}) error {
+	log.Printf("[TRACE] Deleting artifactory.virtual_repository Id=%s\n", d.Id())
 	c := m.(Client)
-	key := d.Get("key").(string)
+	key := d.Id()
 	return c.DeleteRepository(key)
 }
 
-func resourceVirtualRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	c := m.(Client)
-	key := d.Get("key").(string)
-	return c.CheckRepositoryExists(key)
+func virtualRepositoryImportStatePassthrough(d *schema.ResourceData, m interface{}) (s []*schema.ResourceData, err error) {
+	log.Printf("[DEBUG] Importing state!")
+	s, err = schema.ImportStatePassthrough(d, m)
+	log.Printf("[DEBUG] Done importing state!")
+	return
 }

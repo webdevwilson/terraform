@@ -41,6 +41,7 @@ resource "artifactory_virtual_repository" "foobar" {
 	key_pair                                           = "keypair"
     pom_repository_references_cleanup_policy           = "discard_any_reference"
     default_deployment_repo                            = "npm-local"
+	debian_trivial_layout                              = false
     repositories                                       = ["registry.npmjs.org"]
 }`
 
@@ -82,8 +83,9 @@ func TestAccVirtualRepository_import(t *testing.T) {
 				Config: testAccVirtualRepository_full,
 			},
 			resource.TestStep{
-				ResourceName: "artifactory_virtual_repository.foobar",
-				ImportState:  true,
+				ResourceName:      "artifactory_virtual_repository.foobar",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

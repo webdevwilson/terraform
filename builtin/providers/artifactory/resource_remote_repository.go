@@ -13,7 +13,6 @@ func resourceRemoteRepository() *schema.Resource {
 		Read:   resourceRemoteRepositoryRead,
 		Update: resourceRemoteRepositoryUpdate,
 		Delete: resourceRemoteRepositoryDelete,
-		Exists: resourceRemoteRepositoryExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -328,12 +327,6 @@ func resourceRemoteRepositoryDelete(d *schema.ResourceData, m interface{}) error
 	c := m.(Client)
 	key := d.Get("key").(string)
 	return c.DeleteRepository(key)
-}
-
-func resourceRemoteRepositoryExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	c := m.(Client)
-	key := d.Get("key").(string)
-	return c.CheckRepositoryExists(key)
 }
 
 // resourceRemoteDescriptionDiffSuppress suppresses local file cache added to description
