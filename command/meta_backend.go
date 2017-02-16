@@ -16,6 +16,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/hcl"
 	"github.com/hashicorp/terraform/backend"
+	clistate "github.com/hashicorp/terraform/command/state"
 	"github.com/hashicorp/terraform/config"
 	"github.com/hashicorp/terraform/state"
 	"github.com/hashicorp/terraform/terraform"
@@ -531,11 +532,15 @@ func (m *Meta) backendFromPlan(opts *BackendOpts) (backend.Backend, error) {
 		return nil, fmt.Errorf("Error reading state: %s", err)
 	}
 
-	unlock, err := lockState(realMgr, "backend from plan")
+	// Lock the state if we can
+	lockInfo := state.NewLockInfo()
+	lockInfo.Operation = "backend from plan"
+
+	lockID, err := clistate.Lock(realMgr, lockInfo, m.Ui, m.Colorize())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error locking state: %s", err)
 	}
-	defer unlock()
+	defer clistate.Unlock(realMgr, lockID, m.Ui, m.Colorize())
 
 	if err := realMgr.RefreshState(); err != nil {
 		return nil, fmt.Errorf("Error reading state: %s", err)
@@ -983,11 +988,15 @@ func (m *Meta) backend_C_r_s(
 		}
 	}
 
-	unlock, err := lockState(sMgr, "backend_C_r_s")
+	// Lock the state if we can
+	lockInfo := state.NewLockInfo()
+	lockInfo.Operation = "backend from config"
+
+	lockID, err := clistate.Lock(sMgr, lockInfo, m.Ui, m.Colorize())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error locking state: %s", err)
 	}
-	defer unlock()
+	defer clistate.Unlock(sMgr, lockID, m.Ui, m.Colorize())
 
 	// Store the metadata in our saved state location
 	s := sMgr.State()
@@ -1087,11 +1096,15 @@ func (m *Meta) backend_C_r_S_changed(
 		}
 	}
 
-	unlock, err := lockState(sMgr, "backend_C_r_S_changed")
+	// Lock the state if we can
+	lockInfo := state.NewLockInfo()
+	lockInfo.Operation = "backend from config"
+
+	lockID, err := clistate.Lock(sMgr, lockInfo, m.Ui, m.Colorize())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error locking state: %s", err)
 	}
-	defer unlock()
+	defer clistate.Unlock(sMgr, lockID, m.Ui, m.Colorize())
 
 	// Update the backend state
 	s = sMgr.State()
@@ -1244,11 +1257,15 @@ func (m *Meta) backend_C_R_S_unchanged(
 		}
 	}
 
-	unlock, err := lockState(sMgr, "backend_C_R_S_unchanged")
+	// Lock the state if we can
+	lockInfo := state.NewLockInfo()
+	lockInfo.Operation = "backend from config"
+
+	lockID, err := clistate.Lock(sMgr, lockInfo, m.Ui, m.Colorize())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error locking state: %s", err)
 	}
-	defer unlock()
+	defer clistate.Unlock(sMgr, lockID, m.Ui, m.Colorize())
 
 	// Unset the remote state
 	s = sMgr.State()
@@ -1397,21 +1414,6 @@ func init() {
 	// Add the legacy remote backends that haven't yet been convertd to
 	// the new backend API.
 	backendlegacy.Init(Backends)
-}
-
-// simple wrapper to check for a state.Locker and always provide an unlock
-// function to defer.
-func lockState(s state.State, info string) (func() error, error) {
-	l, ok := s.(state.Locker)
-	if !ok {
-		return func() error { return nil }, nil
-	}
-
-	if err := l.Lock(info); err != nil {
-		return nil, err
-	}
-
-	return l.Unlock, nil
 }
 
 // errBackendInitRequired is the final error message shown when reinit
