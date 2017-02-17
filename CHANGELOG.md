@@ -7,10 +7,18 @@ branch for the next major version of Terraform.
 BACKWARDS INCOMPATIBILITIES / NOTES:
 
  * provider/azurerm: scale_sets `os_profile_master_password` now marked as sensitive
+ * provider/azurerm: sql_server `administrator_login_password` now marked as sensitive
 
 IMPROVEMENTS:
 
- * provider/azurerm: Mark the azurerm_scale_set machine password as sensitive #11982
+ * core: "terraformrc" can contain env var references with $FOO [GH-11929]
+ * provider/azurerm: Mark the azurerm_scale_set machine password as sensitive [GH-11982]
+ * provider/azurerm: Mark the azurerm_sql_server admin password as sensitive [GH-12004]
+ 
+0.9.0-beta1 FIXES:
+
+ * command/init: allow unsetting a backend properly [GH-11988]
+ * command/apply: fix crash that could happen with an empty directory [GH-11989]
 
 ## 0.9.0-beta1 (February 15, 2017)
 
@@ -67,6 +75,7 @@ FEATURES:
  * **New Provider:**  `arukas` ([#11171](https://github.com/hashicorp/terraform/issues/11171))
  * **New Data Source:**  `aws_db_instance` ([#11717](https://github.com/hashicorp/terraform/issues/11717))
  * **New Data Source:**  `aws_vpn_gateway` ([#11886](https://github.com/hashicorp/terraform/issues/11886))
+ * **New Data Source:**  `consul_agent_self`, `consul_catalog_service`, `consul_catalog_services`, `consul_catalog_nodes` ([#11729](https://github.com/hashicorp/terraform/pull/11729))
  * **New Data Source:**  `google_compute_zones` ([#11954](https://github.com/hashicorp/terraform/issues/11954))
  * **New Resource:**  `aws_elasticsearch_domain_policy` ([#8648](https://github.com/hashicorp/terraform/issues/8648))
  * **New Resource:**  `aws_vpc_peering_connection_accepter` ([#11505](https://github.com/hashicorp/terraform/issues/11505))
