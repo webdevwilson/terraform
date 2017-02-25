@@ -16,16 +16,14 @@ from the agent specified in the `provider`.
 
 ```
 data "consul_agent_self" "read-dc1-agent" {
-    # query_options {
-    #    # Optional parameter: implicitly uses the current datacenter of the agent
-    #    datacenter = "dc1"
-    # }
+  # query_options {  #    # Optional parameter: implicitly uses the current datacenter of the agent  #    datacenter = "dc1"  # }
 }
 
 # Set the description to a whitespace delimited list of the services
 resource "example_resource" "app" {
-    description = "Consul datacenter ${data.consul_agent_self.read-dc1-agent.datacenter}"
-    ...
+  description = "Consul datacenter ${data.consul_agent_self.read-dc1-agent.datacenter}"
+
+  # ...
 }
 ```
 
@@ -127,9 +125,7 @@ The following attributes are exported:
 
 ### Retry Join EC2 Attributes
 
-* [`access_key_id`](https://www.consul.io/docs/agent/options.html#access_key_id)
 * [`region`](https://www.consul.io/docs/agent/options.html#region)
-* [`secret_access_key`](https://www.consul.io/docs/agent/options.html#secret_access_key)
 * [`tag_key`](https://www.consul.io/docs/agent/options.html#tag_key)
 * [`tag_value`](https://www.consul.io/docs/agent/options.html#tag_value)
 

@@ -19,15 +19,15 @@ Use the navigation to the left to read about the available resources.
 ```
 # Configure the OpenStack Provider
 provider "openstack" {
-    user_name  = "admin"
-    tenant_name = "admin"
-    password  = "pwd"
-    auth_url  = "http://myauthurl:5000/v2.0"
+  user_name   = "admin"
+  tenant_name = "admin"
+  password    = "pwd"
+  auth_url    = "http://myauthurl:5000/v2.0"
 }
 
 # Create a web server
 resource "openstack_compute_instance_v2" "test-server" {
-    ...
+  # ...
 }
 ```
 
@@ -96,6 +96,22 @@ The following arguments are supported:
   Finally, set `auth_url` as the location of the Swift service. Note that this
   will only work when used with the OpenStack Object Storage resources.
 
+## Additional Logging
+
+This provider has the ability to log all HTTP requests and responses between
+Terraform and the OpenStack cloud which is useful for troubleshooting and
+debugging.
+
+To enable these logs, set the `OS_DEBUG` environment variable to `1` along
+with the usual `TF_LOG=DEBUG` environment variable:
+
+```shell
+$ OS_DEBUG=1 TF_LOG=DEBUG terraform apply
+```
+
+If you submit these logs with a bug report, please ensure any sensitive
+information has been scrubbed first!
+
 ## Rackspace Compatibility
 
 Using this OpenStack provider with Rackspace is not supported and not
@@ -112,11 +128,11 @@ instances as shown below:
 
 ```
 resource "openstack_compute_instance_v2" "my_instance" {
-  name = "my_instance"
-  region = "DFW"
-  image_id = "fabe045f-43f8-4991-9e6c-5cabd617538c"
+  name      = "my_instance"
+  region    = "DFW"
+  image_id  = "fabe045f-43f8-4991-9e6c-5cabd617538c"
   flavor_id = "general1-4"
-  key_pair = "provisioning_key"
+  key_pair  = "provisioning_key"
 
   network {
     uuid = "00000000-0000-0000-0000-000000000000"

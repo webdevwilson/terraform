@@ -8,17 +8,31 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
 
  * provider/azurerm: scale_sets `os_profile_master_password` now marked as sensitive
  * provider/azurerm: sql_server `administrator_login_password` now marked as sensitive
+ * provider/google: storage buckets have been updated with the new storage classes. The old classes will continue working as before, but should be migrated as soon as possible, as there's no guarantee they'll continue working forever. [GH-12044]
 
 IMPROVEMENTS:
 
  * core: "terraformrc" can contain env var references with $FOO [GH-11929]
+ * provider/aws: AWS Lambda DeadLetterConfig support [GH-12188]
  * provider/azurerm: Mark the azurerm_scale_set machine password as sensitive [GH-11982]
  * provider/azurerm: Mark the azurerm_sql_server admin password as sensitive [GH-12004]
- 
+
+BUG FIXES:
+
+ * core: targeting will remove untargeted providers [GH-12050]
+ * core: doing a map lookup in a resource config with a computed set no longer crashes [GH-12210]
+
 0.9.0-beta1 FIXES:
 
+ * core: fix local state locking on Windows [GH-12059]
+ * core: destroy provisioners dependent on module variables work [GH-12063]
+ * core: resource destruction happens after dependent resources' destroy provisioners [GH-12063]
+ * core: invalid resource attribute interpolation in a destroy provisioner errors [GH-12063]
  * command/init: allow unsetting a backend properly [GH-11988]
  * command/apply: fix crash that could happen with an empty directory [GH-11989]
+ * command/refresh: fix crash when no configs were in the pwd [GH-12178]
+ * command/{state,taint}: work properly with backend state [GH-12155]
+ * providers/terraform: remote state data source works with new backends [GH-12173]
 
 ## 0.9.0-beta1 (February 15, 2017)
 
@@ -41,7 +55,7 @@ FEATURES:
    no more local caching of remote state, and more. ([#11286](https://github.com/hashicorp/terraform/issues/11286))
  * **Destroy Provisioners:** Provisioners can now be configured to run
    on resource destruction. ([#11329](https://github.com/hashicorp/terraform/issues/11329))
- * **State Locking:** State will be autuomatically locked when supported by the backend.
+ * **State Locking:** State will be automatically locked when supported by the backend.
    Backends supporting locking in this release are Local, S3 (via DynamoDB), and Consul. ([#11187](https://github.com/hashicorp/terraform/issues/11187))
 
 IMPROVEMENTS:
@@ -62,7 +76,7 @@ IMPROVEMENTS:
 BUG FIXES:
 
  * provider/datadog: Default notify_no_data on datadog_monitor to false ([#11903](https://github.com/hashicorp/terraform/issues/11903))
- 
+
 ## 0.8.7 (February 15, 2017)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:

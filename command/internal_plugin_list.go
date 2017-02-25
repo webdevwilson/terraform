@@ -24,6 +24,7 @@ import (
 	datadogprovider "github.com/hashicorp/terraform/builtin/providers/datadog"
 	digitaloceanprovider "github.com/hashicorp/terraform/builtin/providers/digitalocean"
 	dmeprovider "github.com/hashicorp/terraform/builtin/providers/dme"
+	dnsprovider "github.com/hashicorp/terraform/builtin/providers/dns"
 	dnsimpleprovider "github.com/hashicorp/terraform/builtin/providers/dnsimple"
 	dockerprovider "github.com/hashicorp/terraform/builtin/providers/docker"
 	dynprovider "github.com/hashicorp/terraform/builtin/providers/dyn"
@@ -57,6 +58,7 @@ import (
 	rundeckprovider "github.com/hashicorp/terraform/builtin/providers/rundeck"
 	scalewayprovider "github.com/hashicorp/terraform/builtin/providers/scaleway"
 	softlayerprovider "github.com/hashicorp/terraform/builtin/providers/softlayer"
+	spotinstprovider "github.com/hashicorp/terraform/builtin/providers/spotinst"
 	statuscakeprovider "github.com/hashicorp/terraform/builtin/providers/statuscake"
 	templateprovider "github.com/hashicorp/terraform/builtin/providers/template"
 	terraformprovider "github.com/hashicorp/terraform/builtin/providers/terraform"
@@ -97,6 +99,7 @@ var InternalProviders = map[string]plugin.ProviderFunc{
 	"datadog":      datadogprovider.Provider,
 	"digitalocean": digitaloceanprovider.Provider,
 	"dme":          dmeprovider.Provider,
+	"dns":          dnsprovider.Provider,
 	"dnsimple":     dnsimpleprovider.Provider,
 	"docker":       dockerprovider.Provider,
 	"dyn":          dynprovider.Provider,
@@ -130,6 +133,7 @@ var InternalProviders = map[string]plugin.ProviderFunc{
 	"rundeck":      rundeckprovider.Provider,
 	"scaleway":     scalewayprovider.Provider,
 	"softlayer":    softlayerprovider.Provider,
+	"spotinst":     spotinstprovider.Provider,
 	"statuscake":   statuscakeprovider.Provider,
 	"template":     templateprovider.Provider,
 	"terraform":    terraformprovider.Provider,
