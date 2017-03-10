@@ -4773,6 +4773,23 @@ func TestSchemaMap_Validate(t *testing.T) {
 
 			Err: false,
 		},
+
+		"special timeouts field": {
+			Schema: map[string]*Schema{
+				"availability_zone": &Schema{
+					Type:     TypeString,
+					Optional: true,
+					Computed: true,
+					ForceNew: true,
+				},
+			},
+
+			Config: map[string]interface{}{
+				TimeoutsConfigKey: "bar",
+			},
+
+			Err: false,
+		},
 	}
 
 	for tn, tc := range cases {
