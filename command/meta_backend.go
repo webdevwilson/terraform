@@ -23,7 +23,6 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/mitchellh/mapstructure"
 
-	backendlegacy "github.com/hashicorp/terraform/backend/legacy"
 	backendlocal "github.com/hashicorp/terraform/backend/local"
 )
 
@@ -37,6 +36,10 @@ type BackendOpts struct {
 	// is merged directly into the backend configuration when loaded
 	// from a file.
 	ConfigFile string
+
+	// ConfigExtra is extra configuration to merge into the backend
+	// configuration after the extra file above.
+	ConfigExtra map[string]interface{}
 
 	// Plan is a plan that is being used. If this is set, the backend
 	// configuration and output configuration will come from this plan.
@@ -245,6 +248,20 @@ func (m *Meta) backendConfig(opts *BackendOpts) (*config.Backend, error) {
 		if err != nil {
 			return nil, fmt.Errorf(
 				"Error loading extra configuration file for backend: %s", err)
+		}
+
+		// Merge in the configuration
+		backend.RawConfig = backend.RawConfig.Merge(rc)
+	}
+
+	// If we have extra config values, merge that
+	if len(opts.ConfigExtra) > 0 {
+		log.Printf(
+			"[DEBUG] command: adding extra backend config from CLI")
+		rc, err := config.NewRawConfig(opts.ConfigExtra)
+		if err != nil {
+			return nil, fmt.Errorf(
+				"Error adding extra configuration file for backend: %s", err)
 		}
 
 		// Merge in the configuration
@@ -481,6 +498,7 @@ func (m *Meta) backendFromPlan(opts *BackendOpts) (backend.Backend, error) {
 				"and specify the state path when creating the plan.")
 	}
 
+	planBackend := opts.Plan.Backend
 	planState := opts.Plan.State
 	if planState == nil {
 		// The state can be nil, we just have to make it empty for the logic
@@ -489,7 +507,7 @@ func (m *Meta) backendFromPlan(opts *BackendOpts) (backend.Backend, error) {
 	}
 
 	// Validation only for non-local plans
-	local := planState.Remote.Empty() && planState.Backend.Empty()
+	local := planState.Remote.Empty() && planBackend.Empty()
 	if !local {
 		// We currently don't allow "-state-out" to be specified.
 		if m.stateOutPath != "" {
@@ -500,7 +518,7 @@ func (m *Meta) backendFromPlan(opts *BackendOpts) (backend.Backend, error) {
 	/*
 		// Determine the path where we'd be writing state
 		path := DefaultStateFilename
-		if !planState.Remote.Empty() || !planState.Backend.Empty() {
+		if !planState.Remote.Empty() || !planBackend.Empty() {
 			path = filepath.Join(m.DataDir(), DefaultStateFilename)
 		}
 
@@ -529,16 +547,26 @@ func (m *Meta) backendFromPlan(opts *BackendOpts) (backend.Backend, error) {
 	var err error
 	switch {
 	// No remote state at all, all local
-	case planState.Remote.Empty() && planState.Backend.Empty():
+	case planState.Remote.Empty() && planBackend.Empty():
+		log.Printf("[INFO] command: initializing local backend from plan (not set)")
+
 		// Get the local backend
 		b, err = m.Backend(&BackendOpts{ForceLocal: true})
 
 	// New backend configuration set
-	case planState.Remote.Empty() && !planState.Backend.Empty():
-		b, err = m.backendInitFromSaved(planState.Backend)
+	case planState.Remote.Empty() && !planBackend.Empty():
+		log.Printf(
+			"[INFO] command: initializing backend from plan: %s",
+			planBackend.Type)
+
+		b, err = m.backendInitFromSaved(planBackend)
 
 	// Legacy remote state set
-	case !planState.Remote.Empty() && planState.Backend.Empty():
+	case !planState.Remote.Empty() && planBackend.Empty():
+		log.Printf(
+			"[INFO] command: initializing legacy remote backend from plan: %s",
+			planState.Remote.Type)
+
 		// Write our current state to an inmemory state just so that we
 		// have it in the format of state.State
 		inmem := &state.InmemState{}
@@ -548,7 +576,7 @@ func (m *Meta) backendFromPlan(opts *BackendOpts) (backend.Backend, error) {
 		b, err = m.backend_c_R_s(nil, inmem)
 
 	// Both set, this can't happen in a plan.
-	case !planState.Remote.Empty() && !planState.Backend.Empty():
+	case !planState.Remote.Empty() && !planBackend.Empty():
 		return nil, fmt.Errorf(strings.TrimSpace(errBackendPlanBoth))
 	}
 
@@ -1296,8 +1324,12 @@ func (m *Meta) backendInitFromLegacy(s *terraform.RemoteState) (backend.Backend,
 	}
 	config := terraform.NewResourceConfig(rawC)
 
-	// Initialize the legacy remote backend
-	b := &backendlegacy.Backend{Type: s.Type}
+	// Get the backend
+	f := backendinit.Backend(s.Type)
+	if f == nil {
+		return nil, fmt.Errorf(strings.TrimSpace(errBackendLegacyUnknown), s.Type)
+	}
+	b := f()
 
 	// Configure
 	if err := b.Configure(config); err != nil {
@@ -1352,7 +1384,7 @@ If fixing these errors requires changing your remote state configuration,
 you must switch your configuration to the new remote backend configuration.
 You can learn more about remote backends at the URL below:
 
-TODO: URL
+https://www.terraform.io/docs/backends/index.html
 
 The error(s) configuring the legacy remote state:
 
@@ -1362,7 +1394,7 @@ The error(s) configuring the legacy remote state:
 const errBackendLegacyUnknown = `
 The legacy remote state type %q could not be found.
 
-Terraform 0.9.0 shipped with backwards compatible for all built-in
+Terraform 0.9.0 shipped with backwards compatibility for all built-in
 legacy remote state types. This error may mean that you were using a
 custom Terraform build that perhaps supported a different type of
 remote state.
