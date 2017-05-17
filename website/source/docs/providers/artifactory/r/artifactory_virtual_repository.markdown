@@ -1,7 +1,7 @@
 ---
 layout: "artifactory"
 page_title: "Artifactory: artifactory_virtual_repository"
-sidebar_current: "docs-artifactory-virtual-repository"
+sidebar_current: "docs-artifactory-resource-virtual-repository"
 description: |-
   Provides support for setting up virtual repositories in Artifactory
 ---

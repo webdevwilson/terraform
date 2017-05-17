@@ -1,7 +1,7 @@
 ---
 layout: "artifactory"
 page_title: "Artifactory: artifactory_user"
-sidebar_current: "docs-artifactory-user"
+sidebar_current: "docs-artifactory-resource-user"
 description: |-
   Provides support for creating users in Artifactory
 ---

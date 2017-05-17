@@ -40,6 +40,7 @@ func Provider() terraform.ResourceProvider {
 			"artifactory_virtual_repository": resourceVirtualRepository(),
 			"artifactory_user":               resourceUser(),
 			"artifactory_group":              resourceGroup(),
+			"artifactory_permission_target":  resourcePermissionTarget(),
 		},
 	}
 }

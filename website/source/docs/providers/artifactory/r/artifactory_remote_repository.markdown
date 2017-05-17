@@ -1,7 +1,7 @@
 ---
 layout: "artifactory"
 page_title: "Artifactory: artifactory_remote_repository"
-sidebar_current: "docs-artifactory-remote-repository"
+sidebar_current: "docs-artifactory-resource-remote-repository"
 description: |-
   Provides support for setting up remote repositories in Artifactory
 ---

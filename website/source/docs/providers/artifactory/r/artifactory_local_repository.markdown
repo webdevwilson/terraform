@@ -1,7 +1,7 @@
 ---
 layout: "artifactory"
 page_title: "Artifactory: artifactory_local_repository"
-sidebar_current: "docs-artifactory-local-repository"
+sidebar_current: "docs-artifactory-resource-local-repository"
 description: |-
   Provides support for setting up local repositories in Artifactory
 ---

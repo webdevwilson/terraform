@@ -1,7 +1,7 @@
 ---
 layout: "artifactory"
 page_title: "Artifactory: artifactory_group"
-sidebar_current: "docs-artifactory-group"
+sidebar_current: "docs-artifactory-resource-group"
 description: |-
   Provides support for creating groups in Artifactory
 ---

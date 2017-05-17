@@ -30,6 +30,34 @@ type Group struct {
 	RealmAttributes string `json:"realm,omitempty"`
 }
 
+// Permission represents a user or group's ability to do something on a repository
+type Permission rune
+
+const (
+	// Admin user has all permissions
+	Admin Permission = 'a'
+	// Annotate user can annotate
+	Annotate Permission = 'n'
+	// Delete user can delete artifacts from the repository
+	Delete Permission = 'd'
+	// Deploy user can deploy to the repository
+	Deploy Permission = 'w'
+	// Read user can get artifacts from the repository
+	Read Permission = 'r'
+)
+
+// PermissionTargetPrincipal represents a
+type PermissionTargetPrincipal map[string][]Permission
+
+// PermissionTarget assigns permission to users or groups
+type PermissionTarget struct {
+	Name            string                               `json:"name,omitempty"`
+	IncludesPattern string                               `json:"includesPattern,omitempty"`
+	ExcludesPattern string                               `json:"excludesPattern,omitempty"`
+	Repositories    []string                             `json:"repositories,omitempty"`
+	Principals      map[string]PermissionTargetPrincipal `json:"principals,omitempty"`
+}
+
 // LocalRepositoryConfiguration contains items present in local repository requests
 type LocalRepositoryConfiguration struct {
 	Key                          string   `json:"key,omitempty"`
@@ -136,6 +164,10 @@ type Client interface {
 	CreateGroup(g *Group) error
 	UpdateGroup(g *Group) error
 	DeleteGroup(name string) error
+	GetPermissionTarget(name string) (*PermissionTarget, error)
+	CreatePermissionTarget(p *PermissionTarget) error
+	UpdatePermissionTarget(p *PermissionTarget) error
+	DeletePermissionTarget(name string) error
 	ExpireUserPassword(name string) error
 }
 
@@ -310,6 +342,81 @@ func (c clientConfig) DeleteUser(name string) error {
 	return resp.Body.Close()
 }
 
+// GetPermissionTarget returns a permission set from Artifactory
+func (c clientConfig) GetPermissionTarget(name string) (*PermissionTarget, error) {
+	path := fmt.Sprintf("security/permissions/%s", name)
+	resp, err := c.execute("GET", path, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("Failed to get permission target '%s'. Status: %s", name, resp.Status)
+	}
+
+	p := &PermissionTarget{}
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(p)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = resp.Body.Close(); err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}
+
+// CreatePermissionTarget creates a new permission target in artifactory
+func (c clientConfig) CreatePermissionTarget(p *PermissionTarget) error {
+	path := fmt.Sprintf("security/permissions/%s", p.Name)
+	resp, err := c.execute("PUT", path, p)
+
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != 201 {
+		return fmt.Errorf("Failed to create permission target '%s'. Status: %s", p.Name, resp.Status)
+	}
+
+	return resp.Body.Close()
+}
+
+// UpdatePermissionTarget Updates permission target in Artifactory
+func (c clientConfig) UpdatePermissionTarget(p *PermissionTarget) error {
+	path := fmt.Sprintf("security/permissions/%s", p.Name)
+	resp, err := c.execute("POST", path, p)
+
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Failed to update permission target '%s'. Status: %s", p.Name, resp.Status)
+	}
+
+	return resp.Body.Close()
+}
+
+// DeletePermissionTarget in Artifactory
+func (c clientConfig) DeletePermissionTarget(name string) error {
+	path := fmt.Sprintf("security/permissions/%s", name)
+	resp, err := c.execute("DELETE", path, nil)
+
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Failed to delete permission target '%s'. Status: %s", name, resp.Status)
+	}
+
+	return resp.Body.Close()
+}
+
 // ExpireUserPassword
 // Expires a user's password. This may initiate an email depending on configuration
 // settings.
@@ -418,6 +525,7 @@ func (c clientConfig) execute(method string, endpoint string, payload interface{
 		enc.Encode(payload)
 	}
 
+	log.Printf("[DEBUG] %s %s Body: %s", method, url, jsonpayload)
 	req, err := http.NewRequest(method, url, jsonpayload)
 	if err != nil {
 		log.Printf("[ERROR] Error creating new request: %s", err)
